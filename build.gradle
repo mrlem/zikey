@@ -9,13 +9,12 @@ version '1.0-SNAPSHOT'
 application {
     mainClassName = 'org.mrlem.zikey.MainKt'
 }
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
 }
 
 compileKotlin {
