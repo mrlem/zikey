@@ -48,10 +48,13 @@ class ZikeyCore(private val listener: Listener) {
         }
 
         // connecting keyboard to synth
-
-        MidiSystem.getTransmitter().receiver = synthesizer.receiver
-
-        notifyStatus(Status.Ready)
+        try {
+            MidiSystem.getTransmitter().receiver = synthesizer.receiver
+            notifyStatus(Status.Ready)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            notifyStatus(Status.Error("$e"))
+        }
     }
 
     private fun notifyStatus(status: Status) {

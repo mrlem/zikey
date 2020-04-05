@@ -27,7 +27,7 @@ sealed class Status {
      * @property message the error message.
      */
     data class Error(val message: String) : Status() {
-        override val label = Strings["status.loading"]
+        override val label = Strings["status.error"].format(message)
     }
 
     /**
