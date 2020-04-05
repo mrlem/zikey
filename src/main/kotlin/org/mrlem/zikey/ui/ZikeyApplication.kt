@@ -17,8 +17,6 @@ import javax.sound.midi.Instrument
  */
 class ZikeyApplication : Application(), ZikeyCore.Listener {
 
-    private var core: ZikeyCore? = null
-
     // ui components
     private var statusBar: Label? = null
     private var instrumentsList: InstrumentsList? = null
@@ -36,11 +34,22 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
             show()
         }
 
-        core = ZikeyCore(this)
+        ZikeyCore.addListener(this)
+        ZikeyCore.init()
     }
 
     override fun stop() {
-        core?.destroy()
+        ZikeyCore.destroy()
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // ZikeyCore listener
+    ///////////////////////////////////////////////////////////////////////////
+
+    override fun onStatusChanged(status: Status) {
+        (status as? Status.Ready)
+            ?.takeIf { it.defaultSoundBank }
+            ?.run { showSoundBankAlert() }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -60,25 +69,6 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
         bottom = StatusBar()
             .also { statusBar = it }
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // ZikeyCore listener
-    ///////////////////////////////////////////////////////////////////////////
-
-    override fun onStatusChanged(status: Status) {
-        statusBar?.text = status.label
-        (status as? Status.Ready)
-            ?.takeIf { it.defaultSoundBank }
-            ?.run { showSoundBankAlert() }
-    }
-
-    override fun onInstrumentsChanged(instruments: List<Instrument>) {
-        instrumentsList?.update(instruments)
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Internal
-    ///////////////////////////////////////////////////////////////////////////
 
     private fun showSoundBankAlert() {
         Alert(Alert.AlertType.INFORMATION).apply {

@@ -11,11 +11,16 @@ import javax.sound.midi.MidiSystem
 /**
  * Logic core class.
  */
-class ZikeyCore(private val listener: Listener) {
+object ZikeyCore {
 
     private var synthesizer = MidiSystem.getSynthesizer()
+    private var listeners = mutableListOf<Listener>()
 
-    init {
+    ///////////////////////////////////////////////////////////////////////////
+    // Lifecycle
+    ///////////////////////////////////////////////////////////////////////////
+
+    fun init() {
         GlobalScope.launch {
             load()
         }
@@ -25,6 +30,26 @@ class ZikeyCore(private val listener: Listener) {
         synthesizer
             ?.takeIf { it.isOpen }
             ?.close()
+
+        listeners.clear()
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Control methods
+    ///////////////////////////////////////////////////////////////////////////
+
+    fun addListener(listener: Listener) {
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: Listener) {
+        listeners.remove(listener)
+    }
+
+    fun select(program: Int) {
+        synthesizer.channels[0].programChange(program)
+        notifyInstrumentChanged(program)
+
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -35,28 +60,30 @@ class ZikeyCore(private val listener: Listener) {
         notifyStatus(Status.Loading)
 
         // create synthesizer
-        var soundbankLoaded = false
+        var soundBank = synthesizer.defaultSoundbank
         synthesizer = synthesizer.apply {
             try {
-                val soundBank = MidiSystem.getSoundbank(File("/usr/share/sounds/sf2/FluidR3_GM.sf2"))
-                if (!isSoundbankSupported(soundBank)) { throw Exception("unsupported soundbank, using default") }
-                unloadAllInstruments(defaultSoundbank)
-                loadAllInstruments(soundBank)
-                soundbankLoaded = true
+                MidiSystem.getSoundbank(File("/usr/share/sounds/sf2/FluidR3_GM.sf2")).let {
+                    if (!isSoundbankSupported(it)) { throw Exception("unsupported soundbank, using default") }
+                    unloadAllInstruments(defaultSoundbank)
+                    loadAllInstruments(it)
+                    soundBank = it
+                }
             } catch (e: Exception) {
                 // nothing
             }
             notifyInstrumentsChanged(availableInstruments.asList())
 
             open()
-            // TODO - based on selection if any, else last selection, else first instrument
-            channels[0].programChange(12)
+
+            // TODO - restore previously saved instrument, else first instrument
+            select(12)
         }
 
         // connecting keyboard to synth
         try {
             MidiSystem.getTransmitter().receiver = synthesizer.receiver
-            notifyStatus(Status.Ready(defaultSoundBank = !soundbankLoaded))
+            notifyStatus(Status.Ready(soundBank == synthesizer.defaultSoundbank))
         } catch (e: Exception) {
             e.printStackTrace()
             notifyStatus(Status.Error(Strings["error.nokeyboard"]))
@@ -65,13 +92,19 @@ class ZikeyCore(private val listener: Listener) {
 
     private fun notifyStatus(status: Status) {
         GlobalScope.launch(Dispatchers.Main) {
-            listener.onStatusChanged(status)
+            listeners.forEach { it.onStatusChanged(status) }
+        }
+    }
+
+    private fun notifyInstrumentChanged(program: Int) {
+        GlobalScope.launch(Dispatchers.Main) {
+            listeners.forEach { it.onInstrumentChanged(program) }
         }
     }
 
     private fun notifyInstrumentsChanged(instruments: List<Instrument>) {
         GlobalScope.launch(Dispatchers.Main) {
-            listener.onInstrumentsChanged(instruments)
+            listeners.forEach { it.onInstrumentsChanged(instruments) }
         }
     }
 
@@ -80,6 +113,7 @@ class ZikeyCore(private val listener: Listener) {
      */
     interface Listener {
         fun onStatusChanged(status: Status) {}
+        fun onInstrumentChanged(program: Int) {}
         fun onInstrumentsChanged(instruments: List<Instrument>) {}
     }
 

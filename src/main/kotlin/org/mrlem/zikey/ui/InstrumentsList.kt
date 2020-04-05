@@ -5,12 +5,13 @@ import javafx.scene.control.Label
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.util.Callback
+import org.mrlem.zikey.core.ZikeyCore
 import javax.sound.midi.Instrument
 
 /**
  * Component that displays the list of currently available instruments.
  */
-class InstrumentsList : ListView<Instrument>() {
+class InstrumentsList : ListView<Instrument>(), ZikeyCore.Listener {
 
     private val observableInstruments = FXCollections.observableList(mutableListOf<Instrument>())
 
@@ -21,14 +22,34 @@ class InstrumentsList : ListView<Instrument>() {
         minWidth = 200.0
         maxWidth = 400.0
         maxHeight = Double.POSITIVE_INFINITY
+
+        ZikeyCore.addListener(this)
+        selectionModel.selectedItemProperty().addListener { _, old, new ->
+            if (old != new) {
+                ZikeyCore.select(new.patch.program)
+            }
+        }
     }
 
-    /**
-     * Update the list of displayed instruments.
-     */
-    fun update(instruments: List<Instrument>) {
+    ///////////////////////////////////////////////////////////////////////////
+    // ZikeyCore.Listener
+    ///////////////////////////////////////////////////////////////////////////
+
+    override fun onInstrumentChanged(program: Int) {
+        val instrument = observableInstruments.firstOrNull { it.patch.program == program }
+        if (selectionModel.selectedItem != instrument) {
+            selectionModel.select(instrument)
+            scrollTo(instrument)
+        }
+    }
+
+    override fun onInstrumentsChanged(instruments: List<Instrument>) {
         observableInstruments.setAll(instruments)
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Internal
+    ///////////////////////////////////////////////////////////////////////////
 
     private class InstrumentCell : ListCell<Instrument>() {
         override fun updateItem(item: Instrument?, empty: Boolean) {
