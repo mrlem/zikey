@@ -29,7 +29,7 @@ changing the instrument._
 
 * run:
 ```
-bin/zipkey
+bin/zikey
 ```
 
 ### On Windows
