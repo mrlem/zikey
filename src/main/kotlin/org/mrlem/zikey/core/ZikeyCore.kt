@@ -42,14 +42,12 @@ object ZikeyCore {
         listeners.add(listener)
     }
 
-    fun removeListener(listener: Listener) {
-        listeners.remove(listener)
-    }
-
     fun select(program: Int) {
-        synthesizer.channels[0].programChange(program)
-        notifyInstrumentChanged(program)
-
+        if (synthesizer.channels[0].program != program) {
+            synthesizer.channels[0].programChange(program)
+            notifyInstrumentChanged(program)
+            ZikeyPrefs.lastProgram = program
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -76,8 +74,8 @@ object ZikeyCore {
 
             open()
 
-            // TODO - restore previously saved instrument, else first instrument
-            select(12)
+            // restore previously saved instrument, else first instrument
+            select(ZikeyPrefs.lastProgram)
         }
 
         // connecting keyboard to synth
