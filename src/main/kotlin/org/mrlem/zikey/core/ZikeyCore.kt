@@ -3,6 +3,7 @@ package org.mrlem.zikey.core
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.mrlem.zikey.Strings
 import java.io.File
 import javax.sound.midi.MidiSystem
 
@@ -55,7 +56,7 @@ class ZikeyCore(private val listener: Listener) {
             notifyStatus(Status.Ready(defaultSoundBank = !soundbankLoaded))
         } catch (e: Exception) {
             e.printStackTrace()
-            notifyStatus(Status.Error("$e"))
+            notifyStatus(Status.Error(Strings["error.nokeyboard"]))
         }
     }
 
