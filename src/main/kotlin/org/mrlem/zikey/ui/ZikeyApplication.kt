@@ -3,7 +3,8 @@ package org.mrlem.zikey.ui
 import javafx.application.Application
 import javafx.scene.Scene
 import javafx.scene.control.Label
-import javafx.scene.layout.StackPane
+import javafx.scene.control.SplitPane
+import javafx.scene.layout.*
 import javafx.stage.Stage
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Status
@@ -17,7 +18,7 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
     private var core: ZikeyCore? = null
 
     // ui components
-    private var statusLabel: Label? = null
+    private var statusBar: Label? = null
 
     ///////////////////////////////////////////////////////////////////////////
     // Lifecycle
@@ -27,10 +28,9 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
         stage.apply {
             title = Strings["app.name"]
 
-            val root = StackPane()
-            statusLabel = Label().also { root.children.add(it) }
-
-            scene = Scene(root, 640.0, 480.0)
+            scene = Scene(createUi(), 640.0, 480.0).apply {
+                stylesheets.add(ZikeyApplication::class.java.getResource("/ui-dark.css").toExternalForm())
+            }
             show()
         }
 
@@ -42,11 +42,26 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
     }
 
     ///////////////////////////////////////////////////////////////////////////
+    // Internal
+    ///////////////////////////////////////////////////////////////////////////
+
+    private fun createUi() = BorderPane().also { root ->
+        ToolBar().also { root.top = it }
+        SplitPane()
+            .apply { setDividerPosition(0, 0.25) }
+            .apply { items.addAll(InstrumentsList(), FeedbackPane()) }
+            .also { root.center = it }
+        StatusBar()
+            .also { statusBar = it }
+            .also { root.bottom = it }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
     // ZikeyCore listener
     ///////////////////////////////////////////////////////////////////////////
 
     override fun onStatusChanged(status: Status) {
-        statusLabel?.text = status.label
+        statusBar?.text = status.label
     }
 
 }

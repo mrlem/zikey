@@ -1,0 +1,58 @@
+.root {
+  -fx-base: #303030;
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+  -fx-accent: #00bbff40;
+}
+
+.label, .list-cell {
+  -fx-text-fill: #ffffff80;
+}
+
+.tool-bar {
+  -fx-background-color: transparent;
+  -fx-border-width: 0 0 1 0;
+  -fx-border-color: #00000040;
+}
+
+#status {
+  -fx-border-width: 1 0 0 0;
+  -fx-border-color: #00000040;
+}
+
+.split-pane {
+  -fx-background-color: transparent;
+  -fx-border-width: 0 0 0 0;
+  -fx-padding: 0;
+  -fx-background-insets: 0;
+}
+
+.split-pane > .split-pane-divider {
+  -fx-background-color: transparent;
+  -fx-border-width: 0 0 0 1;
+  -fx-border-color: #00000040;
+}
+
+.list-view {
+  -fx-background-color: #00000020;
+}
+
+.list-cell:even {
+  -fx-background-color: #00000010;
+}
+
+.list-cell:odd {
+  -fx-background-color: #00000000;
+}
+
+.list-cell:odd:selected, .list-cell:even:selected {
+  -fx-background-color: derive(-fx-accent, 10%) 10%;
+}
+
+// disable horizontal scrollbar
+.list-view .scroll-bar:horizontal .increment-arrow,
+.list-view .scroll-bar:horizontal .decrement-arrow,
+.list-view .scroll-bar:horizontal .increment-button,
+.list-view .scroll-bar:horizontal .decrement-button {
+  -fx-padding:0;
+}
