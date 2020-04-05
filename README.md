@@ -18,7 +18,7 @@ changing the instrument._
 
 ## Installing
 
-* download the latest release
+* download the [latest release](https://github.com/mrlem/zikey/releases/tag/v0.1)
 * extract it
 
 ## Running
