@@ -2,9 +2,10 @@ package org.mrlem.zikey.ui
 
 import javafx.application.Application
 import javafx.scene.Scene
+import javafx.scene.control.Alert
 import javafx.scene.control.Label
 import javafx.scene.control.SplitPane
-import javafx.scene.layout.*
+import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Status
@@ -59,6 +60,22 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
 
     override fun onStatusChanged(status: Status) {
         statusBar?.text = status.label
+        (status as? Status.Ready)
+            ?.takeIf { it.defaultSoundBank }
+            ?.run { showSoundBankAlert() }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Internal
+    ///////////////////////////////////////////////////////////////////////////
+
+    private fun showSoundBankAlert() {
+        Alert(Alert.AlertType.INFORMATION).apply {
+            title = Strings["alert.default_soundbank.title"]
+            headerText = Strings["alert.default_soundbank.header"]
+            contentText = Strings["alert.default_soundbank.content"]
+            showAndWait()
+        }
     }
 
 }

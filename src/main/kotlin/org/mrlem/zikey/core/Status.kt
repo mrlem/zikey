@@ -17,7 +17,7 @@ sealed class Status {
     /**
      * Status when core is ready.
      */
-    object Ready : Status() {
+    data class Ready(val defaultSoundBank: Boolean = false) : Status() {
         override val label = Strings["status.ready"]
     }
 
