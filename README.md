@@ -38,3 +38,20 @@ bin/zikey
  ```
 bin/zikey.bat
 ```
+
+## About
+
+### Author
+
+* *Sébastien Guillemin*
+
+### License
+
+GPLv3 see [LICENSE.md](LICENSE.md)
+
+### Acknowlegments
+
+Built with:
+
+* [Java Sound](https://openjdk.java.net/groups/sound/): Java Sound API
+* [JavaFX](https://openjfx.io): Java graphics & UI API
