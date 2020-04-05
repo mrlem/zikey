@@ -3,6 +3,7 @@ package org.mrlem.zikey.core
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.sound.midi.MidiSystem
 
 /**
@@ -33,12 +34,21 @@ class ZikeyCore(private val listener: Listener) {
 
         // create synthesizer
         synthesizer = synthesizer.apply {
+            try {
+                val soundBank = MidiSystem.getSoundbank(File("/usr/share/sounds/sf2/FluidR3_GM.sf2"))
+                if (!isSoundbankSupported(soundBank)) { throw Exception("unsupported soundbank, using default") }
+                unloadAllInstruments(defaultSoundbank)
+                loadAllInstruments(soundBank)
+            } catch (e: Exception) {
+                notifyStatus(Status.Error("failed to load sound bank: ${e.message}"))
+            }
+
             open()
-            loadAllInstruments(defaultSoundbank)
             channels[0].programChange(12)
         }
 
         // connecting keyboard to synth
+
         MidiSystem.getTransmitter().receiver = synthesizer.receiver
 
         notifyStatus(Status.Ready)
