@@ -27,7 +27,6 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
     override fun start(stage: Stage) {
         stage.apply {
             title = Strings["app.name"]
-
             scene = Scene(createUi(), 640.0, 480.0).apply {
                 stylesheets.add(ZikeyApplication::class.java.getResource("/ui-dark.css").toExternalForm())
             }
@@ -45,15 +44,13 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
     // Internal
     ///////////////////////////////////////////////////////////////////////////
 
-    private fun createUi() = BorderPane().also { root ->
-        ToolBar().also { root.top = it }
-        SplitPane()
+    private fun createUi() = BorderPane().apply {
+        top = ToolBar()
+        center = SplitPane()
             .apply { setDividerPosition(0, 0.25) }
             .apply { items.addAll(InstrumentsList(), FeedbackPane()) }
-            .also { root.center = it }
-        StatusBar()
+        bottom = StatusBar()
             .also { statusBar = it }
-            .also { root.bottom = it }
     }
 
     ///////////////////////////////////////////////////////////////////////////
