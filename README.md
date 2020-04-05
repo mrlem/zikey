@@ -6,7 +6,7 @@ A no bullshit mu**zik key**board player.
 
 So you just got a sweet little USB midi keyboard, but don't know what to install to play it? Or you've seen all those
 complicated tutorial installing & connecting several tools together? But all you want, is just type your keyboard, and
-some some sound to come out...
+some sound to come out...
 
 **Zikey** might be what you're looking for:
  * run it
