@@ -10,6 +10,7 @@ import javafx.stage.Stage
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Status
 import org.mrlem.zikey.core.ZikeyCore
+import javax.sound.midi.Instrument
 
 /**
  * Application UI.
@@ -20,6 +21,7 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
 
     // ui components
     private var statusBar: Label? = null
+    private var instrumentsList: InstrumentsList? = null
 
     ///////////////////////////////////////////////////////////////////////////
     // Lifecycle
@@ -49,7 +51,12 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
         top = ToolBar()
         center = SplitPane()
             .apply { setDividerPosition(0, 0.25) }
-            .apply { items.addAll(InstrumentsList(), FeedbackPane()) }
+            .apply {
+                items.addAll(
+                    InstrumentsList().also { instrumentsList = it },
+                    FeedbackPane()
+                )
+            }
         bottom = StatusBar()
             .also { statusBar = it }
     }
@@ -63,6 +70,10 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
         (status as? Status.Ready)
             ?.takeIf { it.defaultSoundBank }
             ?.run { showSoundBankAlert() }
+    }
+
+    override fun onInstrumentsChanged(instruments: List<Instrument>) {
+        instrumentsList?.update(instruments)
     }
 
     ///////////////////////////////////////////////////////////////////////////

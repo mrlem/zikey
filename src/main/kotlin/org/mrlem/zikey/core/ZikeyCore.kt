@@ -5,6 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.mrlem.zikey.Strings
 import java.io.File
+import javax.sound.midi.Instrument
 import javax.sound.midi.MidiSystem
 
 /**
@@ -45,8 +46,10 @@ class ZikeyCore(private val listener: Listener) {
             } catch (e: Exception) {
                 // nothing
             }
+            notifyInstrumentsChanged(availableInstruments.asList())
 
             open()
+            // TODO - based on selection if any, else last selection, else first instrument
             channels[0].programChange(12)
         }
 
@@ -66,11 +69,18 @@ class ZikeyCore(private val listener: Listener) {
         }
     }
 
+    private fun notifyInstrumentsChanged(instruments: List<Instrument>) {
+        GlobalScope.launch(Dispatchers.Main) {
+            listener.onInstrumentsChanged(instruments)
+        }
+    }
+
     /**
      * Listener to core events.
      */
     interface Listener {
-        fun onStatusChanged(status: Status)
+        fun onStatusChanged(status: Status) {}
+        fun onInstrumentsChanged(instruments: List<Instrument>) {}
     }
 
 }
