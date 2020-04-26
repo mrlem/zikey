@@ -18,6 +18,7 @@
 #status {
   -fx-border-width: 1 0 0 0;
   -fx-border-color: #00000040;
+  -fx-padding: 4px;
 }
 
 .split-pane {

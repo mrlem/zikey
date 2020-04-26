@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.mrlem.zikey.ui.RootController"
+            prefWidth="600.0"
+            prefHeight="400.0">
+
+    <top>
+        <ToolBar>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label text="%toolbar.soundbank.placeholder"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.25">
+            <ListView
+                    fx:id="instruments"
+                    minWidth="200"
+                    maxWidth="400"
+                    maxHeight="Infinity">
+                <placeholder>
+                    <Label text="%instruments.empty"/>
+                </placeholder>
+            </ListView>
+            <Label
+                    alignment="CENTER"
+                    maxWidth="Infinity"
+                    maxHeight="Infinity"
+                    HBox.hgrow="ALWAYS"
+                    text="%feedback.placeholder" />
+        </SplitPane>
+    </center>
+
+    <bottom>
+        <Label fx:id="status"
+               maxWidth="Infinity"/>
+    </bottom>
+
+</BorderPane>
