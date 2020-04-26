@@ -10,8 +10,7 @@ import javax.sound.midi.*
  */
 class KeyboardMonitor {
 
-    private var ready = false
-    private var keyboard: MidiDevice? = null
+    private var keyboards: List<MidiDevice>? = null
 
     var listener: Listener? = null
         set(value) {
@@ -24,44 +23,21 @@ class KeyboardMonitor {
 
     private fun startMonitor() = GlobalScope.launch {
         while (listener != null) {
-            val previousKeyboard = keyboard
-
-            // find first input device
-            val newKeyboard = MidiSystem.getMidiDeviceInfo()
+            // find all input devices
+            val newKeyboards = MidiSystem.getMidiDeviceInfo()
                 .map { MidiSystem.getMidiDevice(it) }
                 .filterNot { it is Sequencer || it is Synthesizer }
                 .filterNot { it.maxTransmitters == 0 }
-                .firstOrNull()
 
-            // take new device (if any) & open it (if not done already)
-            keyboard = newKeyboard
-                ?.apply { if (!isOpen) { open() } }
-
-            // notify transmitter change
-            when {
-                previousKeyboard != null && newKeyboard == null ->
-                    listener?.onKeyboardDisconnected()
-                previousKeyboard == null && newKeyboard != null ->
-                    listener?.onKeyboardConnected(newKeyboard.transmitter)
-                previousKeyboard?.deviceInfo?.name != newKeyboard?.deviceInfo?.name -> {
-                    listener?.onKeyboardDisconnected()
-                    listener?.onKeyboardConnected(newKeyboard!!.transmitter)
-                }
+            // notify change, if any
+            if (newKeyboards != keyboards) {
+                keyboards = newKeyboards
+                listener?.onKeyboardsChanged(newKeyboards)
             }
 
-            // intial notification, even if there's no keyboard
-            if (!ready) {
-                newKeyboard ?: listener?.onKeyboardDisconnected()
-                ready = true
-            }
-
+            // wait
             delay(pollingRate)
         }
-
-        // close device, otherwise app won't exit
-        keyboard
-            ?.takeIf { it.isOpen }
-            ?.run { close() }
     }
 
     companion object {
@@ -70,8 +46,7 @@ class KeyboardMonitor {
 
     interface Listener {
 
-        fun onKeyboardConnected(transmitter: Transmitter)
-        fun onKeyboardDisconnected()
+        fun onKeyboardsChanged(keyboards: List<MidiDevice>)
 
     }
 

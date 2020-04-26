@@ -17,16 +17,15 @@ class InstrumentsController : ZikeyCore.Listener {
 
     @FXML
     fun initialize() {
-        ZikeyCore.addListener(this)
         instruments.apply {
             items = observableInstruments
             cellFactory = Callback<ListView<Instrument>, ListCell<Instrument>> { InstrumentCell() }
             selectionModel.selectedItemProperty().addListener { _, old, new ->
-                if (old != new) {
-                    changeInstrument(new)
-                }
+                if (old != new) { changeInstrument(new) }
             }
         }
+
+        ZikeyCore.addListener(this)
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -36,7 +35,7 @@ class InstrumentsController : ZikeyCore.Listener {
     override fun onInstrumentChanged(program: Int) {
         val instrument = observableInstruments.firstOrNull { it.patch.program == program }
 
-        // update instruments list
+        // update selected entry
         instruments.apply {
             if (selectionModel.selectedItem != instrument) {
                 selectionModel.select(instrument)

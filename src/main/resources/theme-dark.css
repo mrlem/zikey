@@ -55,5 +55,21 @@
 .list-view .scroll-bar:horizontal .decrement-arrow,
 .list-view .scroll-bar:horizontal .increment-button,
 .list-view .scroll-bar:horizontal .decrement-button {
-  -fx-padding:0;
+  -fx-padding: 0;
+}
+
+.combo-box .list-view {
+  -fx-background-color: derive(-fx-base, 10%);
+}
+
+.combo-box .list-cell:even {
+  -fx-background-color: derive(-fx-base, 10%);
+}
+
+.combo-box .list-cell:odd {
+  -fx-background-color: derive(-fx-base, 10%);
+}
+
+.combo-box .list-cell:odd:selected, .combo-box .list-cell:even:selected {
+  -fx-background-color: derive(-fx-accent, 50%) 50%;
 }

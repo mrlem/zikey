@@ -13,6 +13,7 @@ import javax.sound.midi.*
 object ZikeyCore {
 
     private var synthesizer = MidiSystem.getSynthesizer()
+    private var keyboard: MidiDevice? = null
     private var listeners = mutableListOf<Listener>()
 
     private lateinit var readyStatus: Status.Ready
@@ -20,13 +21,25 @@ object ZikeyCore {
 
     private val keyboardMonitor = KeyboardMonitor()
     private val keyboardListener = object : KeyboardMonitor.Listener {
-        override fun onKeyboardConnected(transmitter: Transmitter) {
-            transmitter.receiver = synthesizer.receiver
-            notifyStatus(readyStatus)
-        }
+        override fun onKeyboardsChanged(keyboards: List<MidiDevice>) {
+            if (!keyboards.contains(keyboard)) {
+                notifyKeyboardChanged(null)
+            }
 
-        override fun onKeyboardDisconnected() {
-            notifyStatus(errorStatus)
+            notifyKeyboardsChanged(keyboards)
+
+            // force selection if required
+            val nothingSelected = keyboard == null
+            val noChoice = keyboards.size <= 1
+            if (nothingSelected || noChoice) select(keyboards.firstOrNull())
+
+            // update status
+            val nothingToSelect = keyboards.isEmpty()
+            if (nothingToSelect) {
+                notifyStatus(errorStatus)
+            } else {
+                notifyStatus(readyStatus)
+            }
         }
     }
 
@@ -41,6 +54,9 @@ object ZikeyCore {
     }
 
     fun destroy() {
+        // make sure the keyboard gets closed, so app exits
+        keyboard?.close()
+
         // make sure the monitor stops, so app exits
         keyboardMonitor.listener = null
     }
@@ -59,6 +75,24 @@ object ZikeyCore {
             notifyInstrumentChanged(program)
             ZikeyPrefs.lastProgram = program
         }
+    }
+
+    fun select(keyboard: MidiDevice?) {
+        if (keyboard != this.keyboard) {
+            // close previous keyboard
+            this.keyboard?.apply {
+                close()
+            }
+
+            // open new keyboard
+            this.keyboard = keyboard?.apply {
+                if (!isOpen) open()
+            }
+
+            keyboard?.transmitter?.receiver = synthesizer.receiver
+        }
+
+        notifyKeyboardChanged(keyboard)
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -112,6 +146,18 @@ object ZikeyCore {
         }
     }
 
+    private fun notifyKeyboardChanged(keyboard: MidiDevice?) {
+        GlobalScope.launch(Dispatchers.Main) {
+            listeners.forEach { it.onKeyboardChanged(keyboard) }
+        }
+    }
+
+    private fun notifyKeyboardsChanged(keyboards: List<MidiDevice>) {
+        GlobalScope.launch(Dispatchers.Main) {
+            listeners.forEach { it.onKeyboardsChanged(keyboards) }
+        }
+    }
+
     /**
      * Listener to core events.
      */
@@ -119,6 +165,8 @@ object ZikeyCore {
         fun onStatusChanged(status: Status) {}
         fun onInstrumentChanged(program: Int) {}
         fun onInstrumentsChanged(instruments: List<Instrument>) {}
+        fun onKeyboardChanged(keyboard: MidiDevice?) {}
+        fun onKeyboardsChanged(keyboards: List<MidiDevice>) {}
     }
 
 }
