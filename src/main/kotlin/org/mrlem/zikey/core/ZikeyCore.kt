@@ -41,12 +41,8 @@ object ZikeyCore {
     }
 
     fun destroy() {
+        // make sure the monitor stops, so app exits
         keyboardMonitor.listener = null
-        synthesizer
-            ?.takeIf { it.isOpen }
-            ?.close()
-
-        listeners.clear()
     }
 
     ///////////////////////////////////////////////////////////////////////////
