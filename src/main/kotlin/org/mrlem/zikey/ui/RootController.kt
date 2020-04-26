@@ -66,13 +66,8 @@ class RootController : Label(), ZikeyCore.Listener {
         observableInstruments.setAll(instruments)
     }
 
-
     ///////////////////////////////////////////////////////////////////////////
     // Internal
-    ///////////////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////////////
-    // UI events
     ///////////////////////////////////////////////////////////////////////////
 
     private fun changeInstrument(instrument: Instrument) {
@@ -80,7 +75,6 @@ class RootController : Label(), ZikeyCore.Listener {
     }
 
     private fun showSoundBankAlert() {
-        // TODO - use FXML here too
         Alert(Alert.AlertType.INFORMATION).apply {
             title = Strings["alert.default_soundbank.title"]
             headerText = Strings["alert.default_soundbank.header"]
