@@ -11,6 +11,7 @@
 
     <top>
         <ToolBar>
+            <fx:include source="ui-keyboards.fxml" />
             <Pane HBox.hgrow="ALWAYS"/>
             <Label text="%toolbar.soundbank.placeholder"/>
         </ToolBar>
