@@ -2,7 +2,6 @@ package org.mrlem.zikey.core
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.mrlem.zikey.Strings
 import java.io.File
@@ -17,16 +16,17 @@ object ZikeyCore {
     private var listeners = mutableListOf<Listener>()
 
     private lateinit var readyStatus: Status.Ready
-    private val noKeyboardStatus = Status.Error(Strings["error.nokeyboard"])
+    private val errorStatus = Status.Error(Strings["error.nokeyboard"])
 
-    private val keyboardListener = object : KeyboardListener {
+    private val keyboardMonitor = KeyboardMonitor()
+    private val keyboardListener = object : KeyboardMonitor.Listener {
         override fun onKeyboardConnected(transmitter: Transmitter) {
             transmitter.receiver = synthesizer.receiver
             notifyStatus(readyStatus)
         }
 
         override fun onKeyboardDisconnected() {
-            notifyStatus(noKeyboardStatus)
+            notifyStatus(errorStatus)
         }
     }
 
@@ -41,6 +41,7 @@ object ZikeyCore {
     }
 
     fun destroy() {
+        keyboardMonitor.listener = null
         synthesizer
             ?.takeIf { it.isOpen }
             ?.close()
@@ -93,22 +94,8 @@ object ZikeyCore {
         }
         readyStatus = Status.Ready(soundBank == synthesizer.defaultSoundbank)
 
-        // connecting keyboard to synth
-        monitorKeyboard()
-    }
-
-    private fun monitorKeyboard() {
-        GlobalScope.launch(Dispatchers.Default) {
-            while (true) {
-                try  {
-                    val transmitter = MidiSystem.getTransmitter()
-                    keyboardListener.onKeyboardConnected(transmitter)
-                } catch (e: MidiUnavailableException) {
-                    keyboardListener.onKeyboardDisconnected()
-                }
-                delay(1000)
-            }
-        }
+        // listen for devices
+        keyboardMonitor.listener = keyboardListener
     }
 
     private fun notifyStatus(status: Status) {
