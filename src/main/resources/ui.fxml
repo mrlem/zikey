@@ -18,15 +18,7 @@
 
     <center>
         <SplitPane dividerPositions="0.25">
-            <ListView
-                    fx:id="instruments"
-                    minWidth="200"
-                    maxWidth="400"
-                    maxHeight="Infinity">
-                <placeholder>
-                    <Label text="%instruments.empty"/>
-                </placeholder>
-            </ListView>
+            <fx:include source="ui-instruments.fxml" />
             <Label
                     alignment="CENTER"
                     maxWidth="Infinity"

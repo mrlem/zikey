@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<ListView xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="org.mrlem.zikey.ui.InstrumentsController"
+          fx:id="instruments"
+          minWidth="200"
+          maxWidth="400"
+          maxHeight="Infinity">
+
+    <placeholder>
+        <Label text="%instruments.empty"/>
+    </placeholder>
+
+</ListView>
