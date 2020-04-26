@@ -10,7 +10,6 @@ import javafx.stage.Stage
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Status
 import org.mrlem.zikey.core.ZikeyCore
-import javax.sound.midi.Instrument
 
 /**
  * Application UI.
