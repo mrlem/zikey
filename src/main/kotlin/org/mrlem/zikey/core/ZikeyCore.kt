@@ -2,11 +2,11 @@ package org.mrlem.zikey.core
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.mrlem.zikey.Strings
 import java.io.File
-import javax.sound.midi.Instrument
-import javax.sound.midi.MidiSystem
+import javax.sound.midi.*
 
 /**
  * Logic core class.
@@ -15,6 +15,20 @@ object ZikeyCore {
 
     private var synthesizer = MidiSystem.getSynthesizer()
     private var listeners = mutableListOf<Listener>()
+
+    private lateinit var readyStatus: Status.Ready
+    private val noKeyboardStatus = Status.Error(Strings["error.nokeyboard"])
+
+    private val keyboardListener = object : KeyboardListener {
+        override fun onKeyboardConnected(transmitter: Transmitter) {
+            transmitter.receiver = synthesizer.receiver
+            notifyStatus(readyStatus)
+        }
+
+        override fun onKeyboardDisconnected() {
+            notifyStatus(noKeyboardStatus)
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Lifecycle
@@ -77,14 +91,23 @@ object ZikeyCore {
             // restore previously saved instrument, else first instrument
             select(ZikeyPrefs.lastProgram)
         }
+        readyStatus = Status.Ready(soundBank == synthesizer.defaultSoundbank)
 
         // connecting keyboard to synth
-        try {
-            MidiSystem.getTransmitter().receiver = synthesizer.receiver
-            notifyStatus(Status.Ready(soundBank == synthesizer.defaultSoundbank))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            notifyStatus(Status.Error(Strings["error.nokeyboard"]))
+        monitorKeyboard()
+    }
+
+    private fun monitorKeyboard() {
+        GlobalScope.launch(Dispatchers.Default) {
+            while (true) {
+                try  {
+                    val transmitter = MidiSystem.getTransmitter()
+                    keyboardListener.onKeyboardConnected(transmitter)
+                } catch (e: MidiUnavailableException) {
+                    keyboardListener.onKeyboardDisconnected()
+                }
+                delay(1000)
+            }
         }
     }
 
