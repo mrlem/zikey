@@ -10,6 +10,7 @@ import javax.sound.midi.*
  */
 class KeyboardMonitor {
 
+    private var ready = false
     private var keyboard: MidiDevice? = null
 
     var listener: Listener? = null
@@ -46,6 +47,12 @@ class KeyboardMonitor {
                     listener?.onKeyboardDisconnected()
                     listener?.onKeyboardConnected(newKeyboard!!.transmitter)
                 }
+            }
+
+            // intial notification, even if there's no keyboard
+            if (!ready) {
+                newKeyboard ?: listener?.onKeyboardDisconnected()
+                ready = true
             }
 
             delay(pollingRate)
