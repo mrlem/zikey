@@ -20,7 +20,7 @@ changing the instrument._
 
 ## Installing
 
-* download the [latest release](https://github.com/mrlem/zikey/releases/tag/v0.2)
+* download the [latest release](https://github.com/mrlem/zikey/releases/tag/v0.3)
 * extract it
 
 ## Running
