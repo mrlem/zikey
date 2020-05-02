@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 
@@ -11,9 +12,26 @@
 
     <top>
         <ToolBar>
-            <fx:include source="ui-keyboards.fxml" />
+            <Button>
+                <graphic>
+                    <ImageView>
+                        <image>
+                            <Image url="@baseline_play_arrow_white_18dp.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button disable="true">
+                <graphic>
+                    <ImageView>
+                        <image>
+                            <Image url="@baseline_stop_white_18dp.png" />
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Label text="%toolbar.soundbank.placeholder"/>
+            <fx:include source="ui-keyboards.fxml" />
         </ToolBar>
     </top>
 
