@@ -5,10 +5,10 @@ import javafx.fxml.FXML
 import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.util.Callback
-import org.mrlem.zikey.core.ZikeyCore
+import org.mrlem.zikey.core.Core
 import javax.sound.midi.Instrument
 
-class InstrumentsController : ZikeyCore.Listener {
+class InstrumentsController : Core.Listener {
 
     @FXML
     private lateinit var instruments: ListView<Instrument>
@@ -25,7 +25,7 @@ class InstrumentsController : ZikeyCore.Listener {
             }
         }
 
-        ZikeyCore.addListener(this)
+        Core.addListener(this)
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ class InstrumentsController : ZikeyCore.Listener {
     ///////////////////////////////////////////////////////////////////////////
 
     private fun changeInstrument(instrument: Instrument) {
-        ZikeyCore.select(instrument.patch.program)
+        Core.select(instrument.patch.program)
     }
 
     private class InstrumentCell : ListCell<Instrument>() {

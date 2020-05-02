@@ -5,19 +5,19 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Label
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Status
-import org.mrlem.zikey.core.ZikeyCore
+import org.mrlem.zikey.core.Core
 
 /**
  * Root UI controller.
  */
-class RootController : Label(), ZikeyCore.Listener {
+class RootController : Label(), Core.Listener {
 
     @FXML
     private lateinit var status: Label
 
     @FXML
     fun initialize() {
-        ZikeyCore.addListener(this)
+        Core.addListener(this)
     }
 
     ///////////////////////////////////////////////////////////////////////////

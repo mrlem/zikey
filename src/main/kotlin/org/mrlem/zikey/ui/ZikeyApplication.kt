@@ -6,13 +6,13 @@ import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.stage.Stage
 import org.mrlem.zikey.Strings
-import org.mrlem.zikey.core.ZikeyCore
+import org.mrlem.zikey.core.Core
 import java.util.*
 
 /**
  * Application lifecycle handler.
  */
-class ZikeyApplication : Application(), ZikeyCore.Listener {
+class ZikeyApplication : Application(), Core.Listener {
 
     override fun start(stage: Stage) {
         val root: Parent = FXMLLoader.load(
@@ -28,11 +28,11 @@ class ZikeyApplication : Application(), ZikeyCore.Listener {
             show()
         }
 
-        ZikeyCore.init()
+        Core.init()
     }
 
     override fun stop() {
-        ZikeyCore.destroy()
+        Core.destroy()
     }
 
 }

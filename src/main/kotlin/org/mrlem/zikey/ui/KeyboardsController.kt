@@ -7,10 +7,10 @@ import javafx.scene.control.ListCell
 import javafx.scene.control.ListView
 import javafx.util.Callback
 import org.mrlem.zikey.Strings
-import org.mrlem.zikey.core.ZikeyCore
+import org.mrlem.zikey.core.Core
 import javax.sound.midi.MidiDevice
 
-class KeyboardsController : ZikeyCore.Listener {
+class KeyboardsController : Core.Listener {
 
     @FXML
     private lateinit var keyboards: ComboBox<MidiDevice?>
@@ -26,7 +26,7 @@ class KeyboardsController : ZikeyCore.Listener {
                 if (old != new) { changeKeyboard(new) }
             }
         }
-        ZikeyCore.addListener(this)
+        Core.addListener(this)
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ class KeyboardsController : ZikeyCore.Listener {
     ///////////////////////////////////////////////////////////////////////////
 
     private fun changeKeyboard(keyboard: MidiDevice?) {
-        ZikeyCore.select(keyboard)
+        Core.select(keyboard)
     }
 
     private class KeyboardCell(item: MidiDevice? = null) : ListCell<MidiDevice?>() {

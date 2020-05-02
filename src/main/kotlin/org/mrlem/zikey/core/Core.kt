@@ -10,7 +10,7 @@ import javax.sound.midi.*
 /**
  * Logic core class.
  */
-object ZikeyCore {
+object Core {
 
     private var synthesizer = MidiSystem.getSynthesizer()
     private var keyboard: MidiDevice? = null
@@ -73,7 +73,7 @@ object ZikeyCore {
         if (synthesizer.channels[0].program != program) {
             synthesizer.channels[0].programChange(program)
             notifyInstrumentChanged(program)
-            ZikeyPrefs.lastProgram = program
+            Prefs.lastProgram = program
         }
     }
 
@@ -120,7 +120,7 @@ object ZikeyCore {
             open()
 
             // restore previously saved instrument, else first instrument
-            select(ZikeyPrefs.lastProgram)
+            select(Prefs.lastProgram)
         }
         readyStatus = Status.Ready(soundBank == synthesizer.defaultSoundbank)
 
