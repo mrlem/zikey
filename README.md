@@ -15,8 +15,7 @@ some sound to come out...
  
  That's it.
 
-_Please note that this software is a **work in progress**. It currently doesn't have a user-interface and doesn't allow
-changing the instrument._
+_Please note that this software is a **work in progress**.
 
 ## Installing
 
