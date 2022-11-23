@@ -7,6 +7,7 @@ buildscript {
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.72'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
 group 'org.mrlem.zikey'
@@ -14,6 +15,11 @@ version '0.4-SNAPSHOT'
 
 application {
     mainClassName = 'org.mrlem.zikey.MainKt'
+}
+
+javafx {
+    version = "19"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 repositories {
