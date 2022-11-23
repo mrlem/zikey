@@ -4,7 +4,6 @@ import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.scene.control.ComboBox
 import javafx.scene.control.ListCell
-import javafx.scene.control.ListView
 import javafx.util.Callback
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Core
@@ -21,7 +20,7 @@ class KeyboardsController : Core.Listener {
     fun initialize() {
         keyboards.apply {
             items = observableKeyboards
-            cellFactory = Callback<ListView<MidiDevice?>, ListCell<MidiDevice?>> { KeyboardCell() }
+            cellFactory = Callback { KeyboardCell() }
             selectionModel.selectedItemProperty().addListener { _, old, new ->
                 if (old != new) { changeKeyboard(new) }
             }

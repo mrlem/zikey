@@ -23,7 +23,9 @@ class ZikeyApplication : Application(), Core.Listener {
         stage.apply {
             title = Strings["app.name"]
             scene = Scene(root, 640.0, 480.0).apply {
-                stylesheets.add(ZikeyApplication::class.java.getResource("/theme-dark.css").toExternalForm())
+                ZikeyApplication::class.java.getResource("/theme-dark.css")
+                    ?.toExternalForm()
+                    ?.let { stylesheets.add(it) }
             }
             show()
         }
