@@ -3,7 +3,6 @@ package org.mrlem.zikey.core
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.mrlem.zikey.Strings
 import java.io.File
 import javax.sound.midi.*
 
@@ -17,7 +16,7 @@ object Core {
     private var listeners = mutableListOf<Listener>()
 
     private lateinit var readyStatus: Status.Ready
-    private val errorStatus = Status.Error(Strings["error.nokeyboard"])
+    private val errorStatus = Status.Error(Status.Error.Reason.NO_KEYBOARD)
 
     private val keyboardMonitor = KeyboardMonitor()
     private val keyboardListener = object : KeyboardMonitor.Listener {

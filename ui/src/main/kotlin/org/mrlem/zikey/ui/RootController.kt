@@ -6,6 +6,7 @@ import javafx.scene.control.Label
 import org.mrlem.zikey.Strings
 import org.mrlem.zikey.core.Status
 import org.mrlem.zikey.core.Core
+import org.mrlem.zikey.label
 
 /**
  * Root UI controller.
