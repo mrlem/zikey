@@ -15,4 +15,5 @@ jobs:
     needs: generate_build_number
     runs-on: ubuntu-latest
     steps:
-    - run: echo "Building ${{ needs.generate_build_number.outputs.build_number }}!"
+    - id: fake_build
+      run: echo "Building ${{ needs.generate_build_number.outputs.build_number }}!"
