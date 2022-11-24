@@ -20,10 +20,10 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     outputs:
-      build_number: ${{ steps.step1.outputs.build_number }}
+      build_number: ${{ steps.generate_id.outputs.build_number }}
 
     steps:
-      - name: Generate the build number and store it in the env
+      - id: generate_id
         run: |
           echo "build: $GITHUB_RUN_NUMBER"
           echo "build_number=$GITHUB_RUN_NUMBER" >> $GITHUB_OUTPUT
