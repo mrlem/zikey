@@ -9,7 +9,7 @@ on:
 jobs:
 
   generate_build_number:
-    uses: mrlem/zikey/.github/workflows/build_number_generate.yml@HEAD
+    uses: mrlem/zikey/.github/workflows/build_number_generate.yml@master
     
   build:
     needs: generate_build_number
