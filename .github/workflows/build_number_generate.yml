@@ -12,7 +12,7 @@ on:
     outputs:
       build_number:
         description: "The generated build number"
-        value: ${{ jobs.generate.outputs.output1 }}
+        value: ${{ jobs.generate.outputs.build_number }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,7 +20,7 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.step1.outputs.build_number }}
+      build_number: ${{ steps.step1.outputs.build_number }}
 
     steps:
       - name: Generate the build number and store it in the env
