@@ -12,18 +12,19 @@ on:
     outputs:
       build_number:
         description: "The generated build number"
-        value: ${{ jobs.generate.outputs.build_number }}
+        value: ${{ jobs.main.outputs.build_number }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  generate:
+  main:
     runs-on: ubuntu-latest
     outputs:
       build_number: ${{ steps.generate_id.outputs.build_number }}
 
     steps:
       - id: generate_id
+        name: Generate an ID
         run: |
           echo "build: $GITHUB_RUN_NUMBER"
           echo "build_number=$GITHUB_RUN_NUMBER" >> $GITHUB_OUTPUT
