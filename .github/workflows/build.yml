@@ -15,4 +15,4 @@ jobs:
     needs: generate_build_number
     runs-on: ubuntu-latest
     steps:
-    - run: echo "Building ${{ needs.job1.outputs.build_number }}!"
+    - run: echo "Building ${{ needs.generate_build_number.outputs.build_number }}!"
