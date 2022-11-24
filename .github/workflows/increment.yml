@@ -15,9 +15,10 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.build_number }}
 
     steps:
       - name: Generate the build number and store it in the env
         run: |
-          echo $GITHUB_RUN_ATTEMPT
-          echo "build_number=$GITHUB_RUN_ATTEMPT" >> $GITHUB_ENV
+          echo "build_number=$GITHUB_RUN_ATTEMPT" >> $GITHUB_OUTPUT
