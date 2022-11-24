@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Increment
+name: Generate build number
 
 # Controls when the workflow will run
 on:
@@ -9,11 +9,15 @@ on:
   
   # Allows reuse of this workflow from another workflow
   workflow_call:
+    outputs:
+      build_number:
+        description: "The generated build number"
+        value: ${{ jobs.generate.outputs.output1 }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  generate:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.step1.outputs.build_number }}
