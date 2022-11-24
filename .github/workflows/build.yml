@@ -16,4 +16,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - id: fake_build
+      name: Fake build
       run: echo "Building ${{ needs.generate_build_number.outputs.build_number }}!"
