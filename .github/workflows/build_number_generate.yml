@@ -25,5 +25,5 @@ jobs:
     steps:
       - name: Generate the build number and store it in the env
         run: |
-          echo "build: $GITHUB_RUN_ATTEMPT"
-          echo "build_number=$GITHUB_RUN_ATTEMPT" >> $GITHUB_OUTPUT
+          echo "build: $GITHUB_RUN_ID"
+          echo "build_number=$GITHUB_RUN_ID" >> $GITHUB_OUTPUT
