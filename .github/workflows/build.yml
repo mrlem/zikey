@@ -1,0 +1,18 @@
+name: Build
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  generate_build_number:
+    uses: mrlem/zikey/.github/workflows/build_number_generate.yml@v1
+    
+  build:
+    needs: generate_build_number
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Building ${{ needs.job1.outputs.build_number }}!"
